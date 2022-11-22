@@ -1,0 +1,66 @@
+[
+    {
+        "version": "2.0.2",
+        "name": "Ensure its a supported credential",
+        "predicate": "{\"if\":[{\"or\":[{\"in\":[\"VaccinationCredential\",{\"var\":\"payload.type\"}]},{\"in\":[\"TestCredential\",{\"var\":\"payload.type\"}]}]}, true, \"unknown\"]}",
+        "type": "GHP",
+        "category": "generic",
+        "id": "5c3779dc-ea6e-47df-aa15-41e203ec7abe"
+    },
+    {
+        "version": "2.0.2",
+        "name": "Check the credential is not expired",
+        "predicate": "{\"if\":[{\"var\":\"payload.expirationDate\"},{\"not-after\":[{\"plusTime\":[{\"var\":\"external.validationClock\"},0,\"day\"]},{\"plusTime\":[{\"var\":\"payload.expirationDate\"},0,\"day\"]}]}, true]}",
+        "type": "VC",
+        "category": "generic",
+        "id": "b7b9b663-080e-41ac-96dd-1109d8c09f9d"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check it is 14 to 365 days since getting the vaccination",
+        "predicate": "{\"if\": [{\"in\": [\"VaccinationCredential\",{\"var\": \"payload.type\"}]},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.credentialSubject.dateOfVaccination\"},14,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.credentialSubject.dateOfVaccination\"},365,\"day\"]}]}, true]}",
+        "type": "GHP",
+        "category": "vaccination",
+        "id": "65d2e8d6-36b4-4298-8a28-649718c72a2f"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for approved vaccine",
+        "predicate": "{\"if\":[{\"in\":[\"VaccinationCredential\",{\"var\":\"payload.type\"}]},{\"in\":[{\"var\":\"payload.credentialSubject.medicinalProductCode\"},[\"207\",\"208\",\"210\",\"212\"]]},true]}",
+        "type": "GHP",
+        "category": "vaccination",
+        "id": "1e3843d1-2599-43af-8277-1ca48e46999f"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for completed vaccination cycle",
+        "predicate": "{\"if\":[{\"in\":[\"VaccinationCredential\",{\"var\":\"payload.type\"}]},{\">=\":[{\"var\":\"payload.credentialSubject.doseNumber\"},{\"var\":\"payload.credentialSubject.dosesPerCycle\"}]},true]}",
+        "type": "GHP",
+        "category": "vaccination",
+        "id": "38a25914-4ad2-474c-a6ce-f69e89918c2b"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check it is less than 72 hours since getting the test",
+        "predicate": "{\"if\": [{\"in\": [\"TestCredential\",{\"var\": \"payload.type\"}]},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.credentialSubject.dateOfSample\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.credentialSubject.dateOfSample\"},72,\"hour\"]}]}, true]}",
+        "type": "GHP",
+        "category": "test",
+        "id": "23a9cd6d-6b1b-4e3c-9a54-3c58a8140451"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check for negative test result",
+        "predicate": "{\"if\": [{\"in\": [\"TestCredential\",{\"var\": \"payload.type\"}]},{\"===\": [{\"var\": \"payload.credentialSubject.testResult\"},\"Not detected\"]}, true]}",
+        "type": "GHP",
+        "category": "test",
+        "id": "4f9910c1-d1c8-4b88-9050-000ed569afd2"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check for approved test",
+        "predicate": "{\"if\":[{\"in\":[\"TestCredential\",{\"var\":\"payload.type\"}]},{\"in\":[{\"var\":\"payload.credentialSubject.testType\"},[\"50548-7\",\"68993-5\",\"82159-5\",\"94306-8\",\"94307-6\",\"94308-4\",\"94309-2\",\"94500-6\",\"94502-2\",\"94503-0\",\"94504-8\",\"94507-1\",\"94508-9\",\"94531-1\",\"94533-7\",\"94534-5\",\"94547-7\",\"94558-4\",\"94559-2\",\"94562-6\"]]},true]}",
+        "type": "GHP",
+        "category": "test",
+        "id": "ed4bb520-390e-4b3d-a34f-17699dd843ca"
+    }
+]

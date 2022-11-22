@@ -1,0 +1,98 @@
+[
+    {
+        "version": "2.0.1",
+        "name": "Ensure its a supported credential",
+        "predicate": "{\"if\":[{\"or\":[{\"var\":\"payload.v.0\"},{\"var\":\"payload.t.0\"},{\"var\":\"payload.r.0\"}]}, true, false]}",
+        "type": "DCC",
+        "category": "generic",
+        "id": "db382c67-1e83-48ac-8025-08549760927a"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check it is 14 to 365 days since getting the vaccination",
+        "predicate": "{\"if\": [{\"var\": \"payload.v.0\"},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.v.0.dt\"},14,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.v.0.dt\"},365,\"day\"]}]}, true]}",
+        "type": "DCC",
+        "category": "vaccination",
+        "id": "bdc63070-4149-4dac-90cf-d8204fc1cdaa"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for approved vaccine",
+        "predicate": "{\"if\": [{\"var\": \"payload.v.0\"},{\"in\": [{\"var\": \"payload.v.0.mp\"},[\"EU/1/20/1528\",\"EU/1/20/1507\",\"EU/1/21/1529\",\"EU/1/20/1525\"]]}, true]}",
+        "type": "DCC",
+        "category": "vaccination",
+        "id": "bae77b15-382a-4a2a-b15e-16d85bd79a87"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check for single vaccination record",
+        "predicate": "{\"if\": [{\"var\": \"payload.v.0\"},{\"!\": [{\"var\": \"payload.v.1\"}]}, true]}",
+        "type": "DCC",
+        "category": "vaccination",
+        "id": "07bad43c-ff7e-4eac-a951-9152e07d951f"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for completed vaccination cycle",
+        "predicate": "{\"if\": [{\"var\": \"payload.v.0\"},{\">=\": [{\"var\": \"payload.v.0.dn\"},{\"var\": \"payload.v.0.sd\"}]}, true]}",
+        "type": "DCC",
+        "category": "vaccination",
+        "id": "1edb7c1f-effb-46fa-a337-4a0ca33fdcfb"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check it is less than 72 hours since getting the test",
+        "predicate": "{\"if\": [{\"var\": \"payload.t.0\"},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.t.0.sc\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.t.0.sc\"},72,\"hour\"]}]}, true]}",
+        "type": "DCC",
+        "category": "test",
+        "id": "5b38d298-e257-4960-92f5-6c3697af0bb9"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check for approved test",
+        "predicate": "{\"if\": [{\"var\": \"payload.t.0\"},{\"in\": [{\"var\": \"payload.t.0.tt\"},[\"LP6464-4\",\"LP217198-3\"]]}, true]}",
+        "type": "DCC",
+        "category": "test",
+        "id": "28496945-624b-4485-b058-c68b6c912f5c"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check for negative test result",
+        "predicate": "{\"if\": [{\"var\": \"payload.t.0\"},{\"===\": [{\"var\": \"payload.t.0.tr\"},\"260415000\"]}, true]}",
+        "type": "DCC",
+        "category": "test",
+        "id": "74bcaa71-cdfa-41a9-a2cf-a383d071b5b3"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for single test record",
+        "predicate": "{\"if\": [{\"var\": \"payload.t.0\"},{\"!\": [{\"var\": \"payload.t.1\"}]}, true]}",
+        "type": "DCC",
+        "category": "test",
+        "id": "d25301aa-ff49-4408-ac09-840315736156"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for single recovery record",
+        "predicate": "{\"if\": [{\"var\": \"payload.r.0\"},{\"!\": [{\"var\": \"payload.r.1\"}]}, true]}",
+        "type": "DCC",
+        "category": "recovery",
+        "id": "bf7ff58b-c0fb-40ae-9cd0-18847f9cc91f"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check current date is within the covered dates",
+        "predicate": "{\"if\": [{\"var\": \"payload.r.0\"},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.r.0.df\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.r.0.du\"},0,\"day\"]}]}, true]}",
+        "type": "DCC",
+        "category": "recovery",
+        "id": "33a70092-c30b-49ba-ab25-c53c7b12d918"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for COVID-19",
+        "predicate": "{\"if\": [{\"var\": \"payload.r.0\"},{\"===\": [{\"var\": \"payload.r.0.tg\"},\"840539006\"]}, true]}",
+        "type": "DCC",
+        "category": "recovery",
+        "id": "84cf3eb7-48f5-41f6-8ffe-197b5244cb19"
+    }
+]

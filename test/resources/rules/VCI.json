@@ -1,0 +1,58 @@
+[
+	{
+		"version": "2.0.2",
+		"name": "Ensure its a supported credential",
+		"predicate": "{\"if\":[{\"or\":[{\"in\":[\"https://smarthealth.cards#laboratory\",{\"var\":\"payload.vc.type\"}]},{\"in\":[\"https://smarthealth.cards#immunization\",{\"var\":\"payload.vc.type\"}]}]},true,false]}",
+		"type": "SHC",
+		"category": "generic",
+		"id": "fb26e0f4-6458-4aaa-9062-7223c95b55ce"
+	},
+	{
+		"version": "2.0.2",
+		"name": "Check the credential is not expired",
+		"predicate": "{\"if\":[{\"var\":\"payload.expirationDate\"},{\"not-after\":[{\"plusTime\":[{\"var\":\"external.validationClock\"},0,\"day\"]},{\"plusTime\":[{\"var\":\"payload.expirationDate\"},0,\"day\"]}]}, true]}",
+		"type": "VC",
+		"category": "generic",
+		"id": "b7b9b663-080e-41ac-96dd-1109d8c09f9d"
+	},
+	{
+		"version": "2.0.3",
+		"name": "Check for completed vaccination cycle, of approved vaccine, between 14 and 365 days ago (double dose)",
+		"predicate": "{\"if\":[{\"and\":[{\"in\":[\"https://smarthealth.cards#immunization\",{\"var\":\"payload.vc.type\"}]},{\"in\":[{\"var\":\"payload.vc.credentialSubject.fhirBundle.entry.1.resource.vaccineCode.coding.0.code\"},[\"207\",\"208\",\"210\"]]}]},{\"not-after\":[{\"plusTime\":[{\"var\":\"payload.vc.credentialSubject.fhirBundle.entry.2.resource.occurrenceDateTime\"},14,\"day\"]},{\"plusTime\":[{\"var\":\"external.validationClock\"},0,\"day\"]},{\"plusTime\":[{\"var\":\"payload.vc.credentialSubject.fhirBundle.entry.2.resource.occurrenceDateTime\"},365,\"day\"]}]},true]}",
+		"type": "SHC",
+		"category": "vaccination",
+		"id": "be9aaabb-8645-4d49-8f8d-e733e9229c80"
+	},
+	{
+		"version": "2.0.2",
+		"name": "Check for completed vaccination cycle, of approved vaccine, between 14 and 365 days ago (single dose)",
+		"predicate": "{\"if\":[{\"and\":[{\"in\":[\"https://smarthealth.cards#immunization\",{\"var\":\"payload.vc.type\"}]},{\"in\":[{\"var\":\"payload.vc.credentialSubject.fhirBundle.entry.1.resource.vaccineCode.coding.0.code\"},[\"212\"]]}]},{\"not-after\":[{\"plusTime\":[{\"var\":\"payload.vc.credentialSubject.fhirBundle.entry.1.resource.occurrenceDateTime\"},14,\"day\"]},{\"plusTime\":[{\"var\":\"external.validationClock\"},0,\"day\"]},{\"plusTime\":[{\"var\":\"payload.vc.credentialSubject.fhirBundle.entry.1.resource.occurrenceDateTime\"},365,\"day\"]}]},true]}",
+		"type": "SHC",
+		"category": "vaccination",
+		"id": "a6e3b187-0350-4423-9d0d-7ef9e5eccc20"
+	},
+	{
+		"version": "2.0.0",
+		"name": "Check it is less than 72 hours since getting the test",
+		"predicate": "{\"if\": [{\"in\": [\"https://smarthealth.cards#laboratory\",{\"var\": \"payload.vc.type\"}]},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.vc.credentialSubject.fhirBundle.entry.1.resource.effectiveDateTime\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.vc.credentialSubject.fhirBundle.entry.1.resource.effectiveDateTime\"},72,\"hour\"]}]}]}",
+		"type": "SHC",
+		"category": "test",
+		"id": "4a2a9e4b-aed2-4b17-9b24-49c8deb70174"
+	},
+	{
+		"version": "2.0.0",
+		"name": "Check for negative test result",
+		"predicate": "{\"if\": [{\"in\": [\"https://smarthealth.cards#laboratory\",{\"var\": \"payload.vc.type\"}]},{\"===\": [{\"var\": \"payload.vc.credentialSubject.fhirBundle.entry.1.resource.valueCodeableConcept.coding.0.code\"},\"260415000\"]}]}",
+		"type": "SHC",
+		"category": "test",
+		"id": "f07544d8-10be-4098-893d-0dc1882a9090"
+	},
+	{
+		"version": "2.0.0",
+		"name": "Check for approved test",
+		"predicate": "{\"if\": [{\"in\": [\"https://smarthealth.cards#laboratory\",{\"var\": \"payload.vc.type\"}]},{\"in\":[{\"var\":\"payload.vc.credentialSubject.fhirBundle.entry.1.resource.code.coding.0.code\"},[\"50548-7\",\"68993-5\",\"82159-5\",\"94306-8\",\"94307-6\",\"94308-4\",\"94309-2\",\"94500-6\",\"94502-2\",\"94503-0\",\"94504-8\",\"94507-1\",\"94508-9\",\"94531-1\",\"94533-7\",\"94534-5\",\"94547-7\",\"94558-4\",\"94559-2\",\"94562-6\"]]},true]}",
+		"type": "SHC",
+		"category": "test",
+		"id": "54735288-8850-4210-bb3b-205c9188570f"
+	}
+]

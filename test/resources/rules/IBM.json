@@ -1,0 +1,106 @@
+[
+    {
+        "version": "2.0.2",
+        "name": "Ensure its a supported credential",
+        "predicate": "{\"if\":[{\"or\":[{\"in\":[\"Vaccination\",{\"var\":\"payload.type\"}]},{\"in\":[\"Test\",{\"var\":\"payload.type\"}]},{\"in\":[\"Temperature\",{\"var\":\"payload.type\"}]},{\"in\":[\"Pass\",{\"var\":\"payload.type\"}]}]},true,\"unknown\"]}",
+        "type": "IDHP",
+        "category": "generic",
+        "id": "2c638c39-6568-40f7-a9ad-3a4cceb7908d"
+    },
+    {
+        "version": "2.0.2",
+        "name": "Check the credential is not expired",
+        "predicate": "{\"if\":[{\"var\":\"payload.expirationDate\"},{\"not-after\":[{\"plusTime\":[{\"var\":\"external.validationClock\"},0,\"day\"]},{\"plusTime\":[{\"var\":\"payload.expirationDate\"},0,\"day\"]}]}, true]}",
+        "type": "VC",
+        "category": "generic",
+        "id": "b7b9b663-080e-41ac-96dd-1109d8c09f9d"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check it is 14 to 365 days since getting the vaccination",
+        "predicate": "{\"if\": [{\"in\": [\"Vaccination\",{\"var\": \"payload.type\"}]},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.credentialSubject.dateOfVaccination\"},14,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.credentialSubject.dateOfVaccination\"},365,\"day\"]}]}, true]}",
+        "type": "IDHP",
+        "category": "vaccination",
+        "id": "e4cc69fc-d18c-4f5a-b149-6b71dfd8c5ef"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for approved vaccine",
+        "predicate": "{\"if\":[{\"in\":[\"Vaccination\",{\"var\":\"payload.type\"}]},{\"in\":[{\"var\":\"payload.credentialSubject.medicinalProductCode\"},[\"207\",\"208\",\"210\",\"212\"]]},true]}",
+        "type": "IDHP",
+        "category": "vaccination",
+        "id": "f510ebfa-29ee-4b21-a8b9-bae4a39fd873"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for completed vaccination cycle",
+        "predicate": "{\"if\":[{\"in\":[\"Vaccination\",{\"var\":\"payload.type\"}]},{\">=\":[{\"var\":\"payload.credentialSubject.doseNumber\"},{\"var\":\"payload.credentialSubject.dosesPerCycle\"}]},true]}",
+        "type": "IDHP",
+        "category": "vaccination",
+        "id": "9f40f334-13bc-4eb3-8afe-04e15ff4db95"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check it is less than 72 hours since getting the test",
+        "predicate": "{\"if\": [{\"in\": [\"Test\",{\"var\": \"payload.type\"}]},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.credentialSubject.dateOfSample\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.credentialSubject.dateOfSample\"},72,\"hour\"]}]}, true]}",
+        "type": "IDHP",
+        "category": "test",
+        "id": "964f8d1c-2f43-4c79-b7a7-c76dae23166e"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check for negative test result",
+        "predicate": "{\"if\": [{\"in\": [\"Test\",{\"var\": \"payload.type\"}]},{\"===\": [{\"var\": \"payload.credentialSubject.testResult\"},\"Not detected\"]}, true]}",
+        "type": "IDHP",
+        "category": "test",
+        "id": "061c04e2-c773-4193-98f4-cda8dd3cc2e2"
+    },
+    {
+        "version": "2.0.1",
+        "name": "Check for approved test",
+        "predicate": "{\"if\":[{\"in\":[\"Test\",{\"var\":\"payload.type\"}]},{\"in\":[{\"var\":\"payload.credentialSubject.testType\"},[\"50548-7\",\"68993-5\",\"82159-5\",\"94306-8\",\"94307-6\",\"94308-4\",\"94309-2\",\"94500-6\",\"94502-2\",\"94503-0\",\"94504-8\",\"94507-1\",\"94508-9\",\"94531-1\",\"94533-7\",\"94534-5\",\"94547-7\",\"94558-4\",\"94559-2\",\"94562-6\"]]},true]}",
+        "type": "IDHP",
+        "category": "test",
+        "id": "d4c09ae0-7653-4701-8cbb-6ad2847408d8"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check it is less than 1 hour since taking the temperature",
+        "predicate": "{\"if\": [{\"in\": [\"Temperature\",{\"var\": \"payload.type\"}]},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.credentialSubject.date\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.credentialSubject.date\"},1,\"hour\"]}]}, true]}",
+        "type": "IDHP",
+        "category": "temperature",
+        "id": "d4ebc3c4-1287-42a4-87d8-4a625c70f66c"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check that the temperature is normal (F)",
+        "predicate": "{\"if\":[{\"and\":[{\"in\":[\"Temperature\",{\"var\":\"payload.type\"}]},{\"in\":[{\"var\":\"payload.credentialSubject.units\"},[\"F\"]]}]},{\"<\":[{\"var\":\"payload.credentialSubject.temperature\"},100.4]},true]}",
+        "type": "IDHP",
+        "category": "temperature",
+        "id": "1fb34600-6da9-43fe-b36c-0d8cdb5ff5dc"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check that the temperature is normal (C)",
+        "predicate": "{\"if\":[{\"and\":[{\"in\":[\"Temperature\",{\"var\":\"payload.type\"}]},{\"in\":[{\"var\":\"payload.credentialSubject.units\"},[\"F\"]]}]},{\"<\":[{\"var\":\"payload.credentialSubject.temperature\"},37.5]},true]}",
+        "type": "IDHP",
+        "category": "temperature",
+        "id": "c580b864-88f6-49d7-9c47-67d0545bd194"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check it is less than 24 hours since getting the pass",
+        "predicate": "{\"if\": [{\"in\": [\"Pass\",{\"var\": \"payload.type\"}]},{\"not-after\": [{\"plusTime\": [{\"var\": \"payload.credentialSubject.date\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"external.validationClock\"},0,\"day\"]},{\"plusTime\": [{\"var\": \"payload.credentialSubject.date\"},24,\"hour\"]}]}, true]}",
+        "type": "IDHP",
+        "category": "pass",
+        "id": "6bd99d01-0425-4dd0-bacb-fa626faa6ab0"
+    },
+    {
+        "version": "2.0.0",
+        "name": "Check for a pass status",
+        "predicate": "{\"if\": [{\"in\": [\"Pass\",{\"var\": \"payload.type\"}]},{\"===\": [{\"var\": \"payload.credentialSubject.status\"},\"Pass\"]}, true]}",
+        "type": "IDHP",
+        "category": "pass",
+        "id": "0fc97f64-e173-4a3e-98f1-2997cb385ce8"
+    }
+]
